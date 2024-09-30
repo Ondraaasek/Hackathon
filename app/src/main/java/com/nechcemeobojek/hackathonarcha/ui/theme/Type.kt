@@ -1,15 +1,26 @@
 package com.nechcemeobojek.hackathonarcha.ui.theme
 
+import android.graphics.fonts.Font
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.nechcemeobojek.hackathonarcha.R
+
+// Font family - Helvetica Neue
+val HelveticaNeue = FontFamily(
+    Font(R.font.helvetica_neue_medium, FontWeight.Normal, FontStyle.Normal),
+    Font(R.font.helvetica_neue_italic, FontWeight.Normal, FontStyle.Italic),
+    Font(R.font.helvetica_neue_bold, FontWeight.Bold, FontStyle.Normal)
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = HelveticaNeue,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
