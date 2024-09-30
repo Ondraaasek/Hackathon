@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Hackathon Archa</string>
+    <string name="Coin_flip_button_text">flip the coin</string>
 </resources>
