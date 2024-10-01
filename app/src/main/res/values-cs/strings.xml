@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hackathon Archa</string>
+    <string name="double_or_nothing">"2x víc nebo nic"</string>
+    <string name="green">zelená</string>
+    <string name="orange">oranžová</string>
+    <string name="you_may_only_spin_once_per_day">Smíš hodit mincí pouze jednou deně.</string>
+    <string name="Coin_flip_button_text">Hodit mincí</string>
+    <string name="you_lose">Prohrál si</string>
+    <string name="you_win_you_point_are_doubled">Vyhrál si, tvoje věrnostní body byly zdovojnásobeny</string>
+</resources>

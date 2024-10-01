@@ -1,5 +1,7 @@
 package com.nechcemeobojek.hackathonarcha
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +43,9 @@ import kotlin.random.Random
 
 
 class MainActivity : ComponentActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,7 +65,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
+
+}
 
 @Composable
 fun Slot_machine_image_cooker(archaslot: Int, modifier: Modifier = Modifier) {
@@ -138,10 +145,29 @@ fun Slot_machine(username: String, points_arg: Int, modifier: Modifier = Modifie
                     modifier = Modifier.padding(top = 21.dp)
                 )
             }
+            val context = LocalContext.current
             Button(onClick = {
                     val scope = CoroutineScope(Dispatchers.Default)
                     var index = Random.nextInt(10, 12);
                     var delay_time = 100L;
+
+                
+                val sharedPref = context.getSharedPreferences(
+                    "my_prefs", Context.MODE_PRIVATE
+                )
+
+                // Get the current integer value (or a default value)
+                val currentIntValue = sharedPref.getInt("my_int_key", 0)
+
+                // Increment the integer value
+                val epoch_of_last_flip = currentIntValue
+
+                // Write the new integer value to SharedPreferences
+                val editor = sharedPref.edit()
+                if (epoch_of_last_flip == 0 || (System.currentTimeMillis() / 1000 - epoch_of_last_flip) >= 86400) {
+                    val editor = sharedPref.edit()
+                    editor.putInt("my_int_key", (System.currentTimeMillis() / 1000).toInt())
+                    editor.apply()
                 scope.launch {
                     if (Random.nextInt(0, 2) == 0) {
                         // green at the end
@@ -155,10 +181,10 @@ fun Slot_machine(username: String, points_arg: Int, modifier: Modifier = Modifie
                         }
                         if (!green_or_orange) {
                             points*=2
-                            wol_text = "You win, you point are doubled!"
+                            wol_text = context.getString(R.string.you_win_you_point_are_doubled)
                             points_text = points.toString()
                         } else {
-                            wol_text = "You lose"
+                            wol_text = context.getString(R.string.you_lose)
                             points = 0
                             points_text = points.toString()
                         }
@@ -174,15 +200,18 @@ fun Slot_machine(username: String, points_arg: Int, modifier: Modifier = Modifie
                         }
                         if (green_or_orange) {
                             points = points * 2
-                            wol_text = "You win, you point are doubled!"
+                            wol_text = context.getString(R.string.you_win_you_point_are_doubled)
                             points_text = points.toString()
                         } else {
-                            wol_text = "You lose"
+                            wol_text = context.getString(R.string.you_lose)
                             points = 0
                             points_text = points.toString()
                         }
                     }
-            }}) {
+            }} else {
+                    wol_text = context.getString(R.string.you_may_only_spin_once_per_day)
+                }
+            }) {
                 Text(stringResource(R.string.Coin_flip_button_text))
             }
             Text(

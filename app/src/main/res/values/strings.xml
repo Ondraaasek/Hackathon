@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Hackathon Archa</string>
-    <string name="Coin_flip_button_text">flip the coin</string>
     <string name="double_or_nothing">Double or nothing</string>
+    <string name="Coin_flip_button_text">Flip coin</string>
     <string name="green">green</string>
     <string name="orange">orange</string>
+    <string name="you_may_only_spin_once_per_day">You may only flip once per day.</string>
+    <string name="you_lose">You lose</string>
+    <string name="you_win_you_point_are_doubled">You win, you point are doubled!</string>
 </resources>
