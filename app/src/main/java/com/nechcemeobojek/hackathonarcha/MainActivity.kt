@@ -1,14 +1,15 @@
 package com.nechcemeobojek.hackathonarcha
 
 import android.os.Bundle
-import android.widget.ToggleButton
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,6 +38,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +51,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Slot_machine(
                         modifier = Modifier,
-                        username = "testu"
+                        username = "testu",
+                        points_arg = 195
                     )
 
                 }
@@ -67,9 +70,19 @@ fun Slot_machine_image_cooker(archaslot: Int, modifier: Modifier = Modifier) {
             .size(200.dp)
     )
 }
+
 @Composable
-fun Slot_machine(username: String, modifier: Modifier = Modifier) {
+fun Slot_machine(username: String, points_arg: Int, modifier: Modifier = Modifier) {
     var archaslot by remember { mutableStateOf(R.drawable.archa_logo_universal ) }
+    var coins_box by remember { mutableStateOf(R.drawable.coins_light ) }
+    var wol_text by remember { mutableStateOf("" ) }
+    var points = points_arg
+    var points_text by remember { mutableStateOf(points.toString()) }
+
+
+    if (isSystemInDarkTheme()) {
+        coins_box = R.drawable.coins_dark
+    }
     Box (
         modifier = Modifier
             .fillMaxSize()
@@ -81,23 +94,50 @@ fun Slot_machine(username: String, modifier: Modifier = Modifier) {
                     .fillMaxSize()
         ) {
             Text(
-                text = "Double or nothing",
+                text = stringResource(R.string.double_or_nothing),
                 fontSize = 35.sp
             )
+            Box(modifier = Modifier.padding(10.dp)) {
+                Image(
+                    painter = painterResource(id = coins_box),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(100.dp)
+                )
+                Text(
+                    text = points_text,
+                    fontSize = 24.sp,
+                    modifier = Modifier
+                        .padding(top = 36.dp)
+                        .padding(start = 44.dp)
+                )
+            }
             Slot_machine_image_cooker(
                 archaslot = archaslot,
                 modifier = Modifier
             )
-            var green_or_orange by remember { mutableStateOf(true) }
+            var green_or_orange by remember { mutableStateOf(false) }
+            Row(modifier = Modifier) {
+                Text(
+                    text = stringResource(R.string.green),
+                    modifier = Modifier.padding(top = 21.dp)
+                )
             Switch(
                 checked = green_or_orange,
                 onCheckedChange = { green_or_orange = it },
-                checkedThumbColor = Color.Red,
-                uncheckedThumbColor = Color.Green,
-                checkedTrackColor = Color.Blue,
-                uncheckedTrackColor = Color.Yellow,
+                colors = androidx.compose.material3.SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = Color(0xFFFF4C00),
+                    uncheckedThumbColor = Color.Black,
+                    uncheckedTrackColor = Color(0xFFB8FF00)
+                ),
                 modifier = Modifier.padding(10.dp)
             )
+                Text(
+                    text = stringResource(R.string.orange),
+                    modifier = Modifier.padding(top = 21.dp)
+                )
+            }
             Button(onClick = {
                     val scope = CoroutineScope(Dispatchers.Default)
                     var index = Random.nextInt(10, 12);
@@ -113,6 +153,15 @@ fun Slot_machine(username: String, modifier: Modifier = Modifier) {
                             index--;
                             delay_time += 50L;
                         }
+                        if (!green_or_orange) {
+                            points*=2
+                            wol_text = "You win, you point are doubled!"
+                            points_text = points.toString()
+                        } else {
+                            wol_text = "You lose"
+                            points = 0
+                            points_text = points.toString()
+                        }
                     } else {
                         // orange at the end
                         while (index != 0) {
@@ -123,10 +172,23 @@ fun Slot_machine(username: String, modifier: Modifier = Modifier) {
                             index--;
                             delay_time += 100L;
                         }
+                        if (green_or_orange) {
+                            points = points * 2
+                            wol_text = "You win, you point are doubled!"
+                            points_text = points.toString()
+                        } else {
+                            wol_text = "You lose"
+                            points = 0
+                            points_text = points.toString()
+                        }
                     }
             }}) {
                 Text(stringResource(R.string.Coin_flip_button_text))
             }
+            Text(
+                text = wol_text,
+                fontSize = 24.sp
+            )
         }
     }
 }
@@ -135,6 +197,8 @@ fun Slot_machine(username: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     HackathonArchaTheme {
-        Slot_machine("testuser")
+        Slot_machine("testuser",
+            points_arg = 195
+        )
     }
 }
